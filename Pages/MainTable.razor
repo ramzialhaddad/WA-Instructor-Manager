@@ -1,0 +1,121 @@
+﻿@page "/instructors"
+
+<PageTitle>Instructors</PageTitle>
+
+@using WA_Instructor_Manager.Data
+@inject InstructorService InstructorService
+
+<h1>Instructors</h1>
+
+@if (instructors == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Instructor Name</th>
+            <th>Date of Birth</th>
+            <th>Contact</th>
+            <th>Medical Certificate</th>
+            <th>Ratings</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var instructor in instructors)
+        {
+            <tr @key=instructor>
+                <td>@instructor.Name</td>
+                <td>@instructor.DateOfBirth.ToString("dd MMMM yyyy")</td>
+                    
+                <!-- Contact Details -->
+                <td>
+                    <table>
+                        @if (instructor.Phone == null && instructor.Email == null)
+                        {
+                            <tr>N/A</tr>
+                        }
+                        else
+                        {
+                            if (instructor.Phone != null)
+                            {
+                                <tr>@instructor.Phone</tr>
+                            }
+
+                            if (instructor.Email != null)
+                            {
+                                <tr>@instructor.Email</tr>
+                            }
+                        }
+                    </table>
+                </td>
+                    
+                <!-- Medical Certificate -->
+                <td>
+                    <table>
+                        @if (instructor.MedicalCertificate == null)
+                        {
+                            <tr>N/A</tr>
+                        }
+                        else
+                        {
+                            <tr>Category: @instructor.MedicalCertificate.MedicalCategory</tr>
+                            <tr>Issued: @instructor.MedicalCertificate.DateOfIssue.ToString("dd MMMM yyyy")</tr>
+                            <tr>Expires: @instructor.MedicalCertificate.DateOfExpiry.ToString("dd MMMM yyyy")</tr>
+                        }
+                    </table>
+                </td>
+                    
+                <!-- Ratings -->
+                <td>
+                        
+                    <table>
+                        @if (instructor.Ratings == null)
+                        {
+                            <td>N/A</td>
+                        }
+                        else
+                        {
+                            foreach (var rating in instructor.Ratings)
+                            {
+                                <td>
+                                    <tr>Rating Type: @rating.RatingType</tr>
+                                    <tr>Certificate: @rating.CertificateNumber</tr>
+                                    <tr>Issued: @rating.DateOfIssue.ToString("dd MMMM yyyy")</tr>
+                                    <tr>Expires: @rating.DateOfExpiry.ToString("dd MMMM yyyy")</tr>
+                                </td>
+                            }
+                        }
+                    </table>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    
+    // <button class="btn btn-primary" @onclick="RefreshData">Refresh Data</button>
+    private Instructor[]? instructors;
+
+    /*
+    protected override void OnInitialized()
+    {
+        instructors = InstructorService.GetInstructorsSync();
+    }*/
+    
+    
+    protected override async Task OnInitializedAsync()
+    {
+        instructors = await InstructorService.GetInstructorsAsync();
+    }
+    
+    /*
+    private void RefreshData()
+    {
+        instructors = InstructorService.GetInstructorsSync();
+    }*/
+}

@@ -1,0 +1,68 @@
+﻿@page "/addinstructor"
+@using WA_Instructor_Manager.Data
+
+<PageTitle>Add Instructor</PageTitle>
+
+<h1>Add Instructor</h1>
+
+<table style="border: 5px solid tomato;">
+    <tr>
+        <label>Name: </label><input placeholder="John Doe"/><br>
+    </tr>
+    <tr>
+        <label>Date of Birth: </label><input type="date"/><br>
+    </tr>
+    <tr>
+        <label>Phone Number: </label><input type="tel" placeholder="1234567890"/><br>
+    </tr>
+    <tr>
+        <label>Email:</label><input placeholder="1234567890"/><br>
+    </tr>
+    <tr>
+        <label>Medical Certificate Number: </label><input placeholder="1234567890"/><br>
+        <label>Medical Certificate Issue Date: </label><input type="date"/><br>
+        <label>Medical Certificate Expiry Date: </label><input type="date"/><br>
+    </tr>
+    
+    <tr>
+        <label>Rating: </label><input @bind="currentRating.RatingType" placeholder="Night Rating"/><br>
+        <label>Certificate Number: </label><input @bind="currentRating.CertificateNumber" placeholder="1234567890"/><br>
+        <label>Rating Issue Date: </label><input @bind="currentRating.DateOfIssue" type="date" /><br>
+        <label>Rating Expiry Date: </label><input @bind="currentRating.DateOfExpiry" type="date"/><br>
+        <button class="btn btn-primary" @onclick="ClearRating">Clear</button>
+        <button class="btn btn-primary" @onclick="AddRating">Add Rating</button>
+    </tr>   
+    
+    @foreach(var rating in ratings)
+    {
+        <td>
+            <label>Rating: @rating.RatingType</label><br>
+            <label>Certificate Number: @rating.CertificateNumber</label><br>
+            <label>Rating Issue Date: @rating.DateOfIssue.ToString("dd MMMM yyyy")</label><br>
+            <label>Rating Expiry Date: @rating.DateOfExpiry.ToString("dd MMMM yyyy")</label><br>
+            <button @onclick="() => RemoteRating(rating)">Remove Rating</button>
+        </td>
+    }
+
+</table>
+
+@code {
+    private List<Rating> ratings = new List<Rating>();
+    private Rating currentRating = new Rating();
+
+    void AddRating()
+    {   
+        ratings.Add(currentRating);
+        ClearRating();
+    }
+
+    void RemoteRating(Rating rating)
+    {
+        ratings.Remove(rating);
+    }
+    
+    void ClearRating()
+    {
+        currentRating = new Rating();
+    }
+}
